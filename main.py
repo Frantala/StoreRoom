@@ -53,8 +53,8 @@ class Pañol:
         lbl_herramientas = Label(marco_herramientas, text="Herramientas", font=("helvetica", 15, "bold"))
         lbl_herramientas.grid(row=1, column=0, pady=5, padx=8)
 
-        herramientas = customtkinter.CTkEntry(marco_herramientas, width=300, height=100, fg_color="white", text_color="black", font=("helvetica", 10))
-        herramientas.grid(row=1, column=1, pady=5, padx=100)
+        herramientas =  customtkinter.CTkTextbox(marco_herramientas)
+        herramientas.grid(row=1, column=3)
 
 
 
