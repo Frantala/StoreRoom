@@ -2,7 +2,6 @@ import sqlite3
 import tkinter as ttk
 from tkinter import *
 from tkinter import messagebox
-import customtkinter
 
 class Pañol:
     #db_name = False
@@ -29,20 +28,21 @@ class Pañol:
         lbl_nombre_apellido = Label(marco, text="Nombre y Apellido", font=("helvetica", 15, "bold"))
         lbl_nombre_apellido.grid(row=1, column=0, sticky="s", pady=5, padx=8)
 
-        nombre_apellido = Entry(marco, width=40)
-        nombre_apellido.grid(row=1, column=1, pady=5, padx=100)
+        self.nombre_apellido = Entry(marco, width=40, border=5, font=("helvetica", 12))
+        self.nombre_apellido.grid(row=1, column=1, pady=5, padx=100)
+        self.nombre_apellido.focus()
 
         lbl_profesor = Label(marco, text="Profesor", font=("helvetica", 15, "bold"))
         lbl_profesor.grid(row=2, column=0, sticky="s", pady=5, padx=8)
 
-        profesor = Entry(marco, width=40)
-        profesor.grid(row=2, column=1, pady=5, padx=100)
+        self.profesor = Entry(marco, width=40, border=5, font=("helvetica", 12))
+        self.profesor.grid(row=2, column=1, pady=5, padx=100)
 
         lbl_curso = Label(marco, text="Curso", font=("helvetica", 15, "bold"))
         lbl_curso.grid(row=3, column=0, pady=5, padx=8)
 
-        curso = Entry(marco, width=40)
-        curso.grid(row=3, column=1)
+        self.curso = Entry(marco, width=40,border=5, font=("helvetica", 12))
+        self.curso.grid(row=3, column=1)
 
         ### MARCO HERRAMIENTAS ###
         marco_herramientas = LabelFrame(ventana_herramienta, text="Herramientas a llevar",font=("helvetica", 20, "bold"),pady=5)
@@ -53,10 +53,23 @@ class Pañol:
         lbl_herramientas = Label(marco_herramientas, text="Herramientas", font=("helvetica", 15, "bold"))
         lbl_herramientas.grid(row=1, column=0, pady=5, padx=8)
 
-        herramientas =  customtkinter.CTkTextbox(marco_herramientas)
-        herramientas.grid(row=1, column=3) 
+        self.herramientas = ttk.Text(marco_herramientas, width=50, height=10,font=("helvetica", 12), border=5)
+        self.herramientas.grid(row=1, column=3, padx=15, pady=10)
+
+        ### FRAME BOTONES ###
+        frame_botones = LabelFrame(ventana_herramienta)
+        frame_botones.pack()
+
+        ### BOTONES ###
+        boton_registrar = Button(frame_botones, text="AGREGAR", height=2, width=15, font=("helvetica", 12), bg="green", fg="white")
+        boton_registrar.grid(row=0, column=0)
+        boton_editar = Button(frame_botones, text="EDITAR", height=2, width=15, font=("helvetica", 12), bg="gray", fg="white")
+        boton_editar.grid(row=0, column=1)
+        boton_eliminar = Button(frame_botones, text="ELIMINAR", width=15, height=2, font=("helvetica", 12), bg="red", fg="white")
+        boton_eliminar.grid(row=0, column=2)
 
 
+        ### TABLA ###
 
 app = ttk.Tk()
 
