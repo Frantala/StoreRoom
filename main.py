@@ -54,7 +54,7 @@ class Pañol:
         lbl_herramientas.grid(row=1, column=0, pady=5, padx=8)
 
         herramientas =  customtkinter.CTkTextbox(marco_herramientas)
-        herramientas.grid(row=1, column=3)
+        herramientas.grid(row=1, column=3) 
 
 
 
