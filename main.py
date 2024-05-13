@@ -1,6 +1,6 @@
 import sqlite3 
-import tkinter as ttk
 from tkinter import *
+from tkinter import ttk
 from tkinter import messagebox
 
 class Pañol:
@@ -53,7 +53,7 @@ class Pañol:
         lbl_herramientas = Label(marco_herramientas, text="Herramientas", font=("helvetica", 15, "bold"))
         lbl_herramientas.grid(row=1, column=0, pady=5, padx=8)
 
-        self.herramientas = ttk.Text(marco_herramientas, width=50, height=10,font=("helvetica", 12), border=5)
+        self.herramientas = Text(marco_herramientas, width=50, height=10,font=("helvetica", 12), border=5)
         self.herramientas.grid(row=1, column=3, padx=15, pady=10)
 
         ### FRAME BOTONES ###
@@ -70,8 +70,25 @@ class Pañol:
 
 
         ### TABLA ###
+        # Crear el widget Treeview
+        self.tabla = ttk.Treeview(columns=("ALUMNO", "Profesor", "Curso", "Herramientas"), show="headings")
 
-app = ttk.Tk()
+        # Configurar las columnas
+        self.tabla.column("ALUMNO", width=100)
+        self.tabla.column("Profesor", width=100)
+        self.tabla.column("Curso", width=100)
+        self.tabla.column("Herramientas", width=200)
+
+# Encabezados de las columnas
+        self.tabla.heading("ALUMNO", text="ALUMNO")
+        self.tabla.heading("Profesor", text="PROFESOR")
+        self.tabla.heading("Curso", text="CURSO")
+        self.tabla.heading("Herramientas", text="HERRAMIENTAS")
+
+        self.tabla.pack(pady=20)
+
+
+app = Tk()
 
 my_app = Pañol(app)
 app.mainloop()
