@@ -1,3 +1,4 @@
+import cv2
 import sqlite3 
 from tkinter import *
 from tkinter import ttk
@@ -61,13 +62,12 @@ class Pañol:
                 frame_botones.pack()
 
                 ### BOTONES ###
-                boton_registrar = Button(frame_botones, text="AGREGAR", height=2, width=15, font=("helvetica", 12), bg="green", fg="white")
+                boton_registrar = Button(frame_botones, text="AGREGAR", height=2, width=15, font=("helvetica", 12), bg="green", fg="white", command=agregar)
                 boton_registrar.grid(row=0, column=0)
                 boton_editar = Button(frame_botones, text="EDITAR", height=2, width=15, font=("helvetica", 12), bg="gray", fg="white")
                 boton_editar.grid(row=0, column=1)
                 boton_eliminar = Button(frame_botones, text="ELIMINAR", width=15, height=2, font=("helvetica", 12), bg="red", fg="white")
                 boton_eliminar.grid(row=0, column=2)
-
 
                 ### TABLA ###
                 # Crear el widget Treeview
@@ -87,6 +87,29 @@ class Pañol:
 
                 self.tabla.pack(pady=20)
 
+                ### CRUD ###
+                def conexion_db(self, query, parameters=()):
+                        conn = sqlite3.connect("Proyecto-Escuela.db")
+                        cursor = conn.cursor()
+                        result = cursor.execute(query, parameters)
+                        conn.commit()
+                        conn.close()
+                        return result
+                
+                ### Funcion Agregar datos a la tabla y a la base de datos ###
+                def agregar(self):
+                        if self.validar():
+                                query = 'INSERT INTO usuarios (nombre_apellido, profesor, curso, herramientas) VALUES (?, ?, ?, ?)'
+                                parameters = (self.nombre_apellido.get(), self.profesor.get(), self.curso.get(), self.herramientas.get("1.0", END).strip())
+                                self.run_query(query, parameters)
+                                messagebox.showinfo("Información", "Registro agregado correctamente")
+                                self.nombre_apellido.delete(0, END)
+                                self.profesor.delete(0, END)
+                                self.curso.delete(0, END)
+                                self.herramientas.delete("1.0", END)
+                                self.mostrar_usuarios()
+                        else:
+                                messagebox.showwarning("Advertencia", "Debe completar todos los campos")
 
 app = Tk()
 
