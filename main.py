@@ -1,5 +1,3 @@
-import cv2
-import sqlite3 
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -85,11 +83,7 @@ class Pañol:
                 self.tree.heading("Curso", text="CURSO")
                 self.tree.heading("Herramientas", text="HERRAMIENTAS")
 
-                self.tree.pack(pady=20)
-
-                ### CRUD ###
-                         
-                
+                self.tree.pack(pady=20)                
                 
                 
 
