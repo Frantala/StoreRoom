@@ -1,6 +1,4 @@
 import sqlite3
-import firebase_admin
-from firebase_admin import credentials, firestore
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -8,7 +6,24 @@ from tkinter import messagebox
 
 app = Tk()
 
-
+# Crear funcion agregar a la base de datos
+def agregar():
+    # Crear o conectar a una base de datos
+    conn = sqlite3.connect('Proyecto-Escuela')
+    # Crear un cursor
+    c = conn.cursor()
+    # Insertar en una tabla
+    c.execute("INSERT INTO Registros VALUES(:nombre_apellido,:profesor,:curso,:herramientas)",
+              {
+                  'nombre_apellido':nombre_apellido.get(),
+                  'profesor':profesor.get(),
+                  'curso': curso.get(),
+                  'herramientas': herramientas.get("1.0")
+              })
+    #Guardar los cambios
+    conn.commit()
+    #Cerrar la conexion
+    conn.close()
 #### TITULO ####
 titulo = Label(text="REGISTRO DE HERRAMIENTAS", fg="black", font=("helvetica", 17, "bold"), pady=10)
 titulo.pack()
@@ -53,16 +68,16 @@ herramientas.grid(row=1, column=3, padx=15, pady=10)
 frame_botones = LabelFrame(app)
 frame_botones.pack()
 
-                ### BOTONES ###
-boton_registrar = Button(frame_botones, text="AGREGAR", height=2, width=15, font=("helvetica", 12), bg="green", fg="white")
+### BOTONES ###
+boton_registrar = Button(frame_botones, text="AGREGAR", height=2, width=15, font=("helvetica", 12), bg="green", fg="white", command=agregar)
 boton_registrar.grid(row=0, column=0)
 boton_editar = Button(frame_botones, text="EDITAR", height=2, width=15, font=("helvetica", 12), bg="gray", fg="white")
 boton_editar.grid(row=0, column=1)
 boton_eliminar = Button(frame_botones, text="ELIMINAR", width=15, height=2, font=("helvetica", 12), bg="red", fg="white")
 boton_eliminar.grid(row=0, column=2)
 
-                ### TABLA ###
-                # Crear el widget Treeview
+### TABLA ###
+# Crear el widget Treeview
                 
         
 app.mainloop()
