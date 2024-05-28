@@ -65,6 +65,11 @@ def eliminar():
         messagebox.showinfo("Eliminación exitosa", "Registro eliminado correctamente")
         mostrar_registros()
 
+
+# creacion de una funcion para editar los registros
+def editar():
+    pass
+
 app = Tk()
 app.title("Registro de Herramientas")
 
@@ -105,7 +110,7 @@ frame_botones.pack()
 
 boton_registrar = Button(frame_botones, text="AGREGAR", height=2, width=15, font=("helvetica", 12), bg="green", fg="white", command=agregar)
 boton_registrar.grid(row=0, column=0)
-boton_editar = Button(frame_botones, text="EDITAR", height=2, width=15, font=("helvetica", 12), bg="gray", fg="white")
+boton_editar = Button(frame_botones, text="EDITAR", height=2, width=15, font=("helvetica", 12), bg="gray", fg="white", command=editar)
 boton_editar.grid(row=0, column=1)
 boton_eliminar = Button(frame_botones, text="ELIMINAR", width=15, height=2, font=("helvetica", 12), bg="red", fg="white", command=eliminar)
 boton_eliminar.grid(row=0, column=2)
