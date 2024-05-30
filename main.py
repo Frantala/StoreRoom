@@ -67,8 +67,44 @@ def eliminar():
 
 
 # creacion de una funcion para editar los registros
-def editar():
-    pass
+def actualizar_registro():
+    seleccion = tree.focus()
+    if not seleccion:
+        return
+
+    # Obtener los valores del registro seleccionado
+    selected_item = tree.item(seleccion)
+    id_registro = selected_item['values'][0]  # Suponiendo que el ID está en la primera columna
+
+    # Obtener todos los elementos del Listbox herramientas
+    herramientas_valores = ', '.join(herramientas.get(0, END))  # Convierte la lista a una cadena
+
+    # Actualizar el Treeview
+    tree.item(seleccion, values=(id_registro, nombre_apellido.get(), profesor.get(), curso.get(), herramientas_valores))
+
+    # Conectar a la base de datos
+    conn = sqlite3.connect('Proyecto-Escuela')
+    c = conn.cursor()
+
+    # Actualizar el registro en la base de datos
+    c.execute(""" UPDATE Registros SET
+                  nombre_apellido = :nombre_apellido,
+                  profesor = :profesor,
+                  curso = :curso,
+                  herramientas = :herramientas
+                  WHERE ID = :id """,
+              {
+                  'id': id_registro,
+                  'nombre_apellido': nombre_apellido.get(),
+                  'profesor': profesor.get(),
+                  'curso': curso.get(),
+                  'herramientas': herramientas_valores
+              })
+
+    conn.commit()
+    conn.close()
+    mostrar_registros()
+
 
 app = Tk()
 app.title("Registro de Herramientas")
@@ -110,7 +146,7 @@ frame_botones.pack()
 
 boton_registrar = Button(frame_botones, text="AGREGAR", height=2, width=15, font=("helvetica", 12), bg="green", fg="white", command=agregar)
 boton_registrar.grid(row=0, column=0)
-boton_editar = Button(frame_botones, text="EDITAR", height=2, width=15, font=("helvetica", 12), bg="gray", fg="white", command=editar)
+boton_editar = Button(frame_botones, text="EDITAR", height=2, width=15, font=("helvetica", 12), bg="gray", fg="white", command=actualizar_registro)
 boton_editar.grid(row=0, column=1)
 boton_eliminar = Button(frame_botones, text="ELIMINAR", width=15, height=2, font=("helvetica", 12), bg="red", fg="white", command=eliminar)
 boton_eliminar.grid(row=0, column=2)
