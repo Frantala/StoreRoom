@@ -65,45 +65,41 @@ def eliminar():
         messagebox.showinfo("Eliminación exitosa", "Registro eliminado correctamente")
         mostrar_registros()
 
+def cargar_registro(event):
+    seleccionado = tree.selection()
+    if seleccionado:
+        item = tree.item(seleccionado)
+        registro_id = item['values'][0]
+        nombre_apellido.delete(0, END)
+        nombre_apellido.insert(END, item['values'][1])
+        profesor.delete(0, END)
+        profesor.insert(END, item['values'][2])
+        curso.delete(0, END)
+        curso.insert(END, item['values'][3])
+        herramientas.delete("1.0", END)
+        herramientas.insert(END, item['values'][4])
+        boton_editar.config(state=NORMAL)
+        boton_editar.config(command=lambda: editar_registro(registro_id))
 
-# creacion de una funcion para editar los registros
-def actualizar_registro():
-    seleccion = tree.focus()
-    if not seleccion:
-        return
-
-    # Obtener los valores del registro seleccionado
-    selected_item = tree.item(seleccion)
-    id_registro = selected_item['values'][0]  # Suponiendo que el ID está en la primera columna
-
-    # Obtener todos los elementos del Listbox herramientas
-    herramientas_valores = ', '.join(herramientas.get(0, END))  # Convierte la lista a una cadena
-
-    # Actualizar el Treeview
-    tree.item(seleccion, values=(id_registro, nombre_apellido.get(), profesor.get(), curso.get(), herramientas_valores))
-
-    # Conectar a la base de datos
+def editar_registro(registro_id):
     conn = sqlite3.connect('Proyecto-Escuela')
     c = conn.cursor()
-
-    # Actualizar el registro en la base de datos
-    c.execute(""" UPDATE Registros SET
-                  nombre_apellido = :nombre_apellido,
-                  profesor = :profesor,
-                  curso = :curso,
-                  herramientas = :herramientas
-                  WHERE ID = :id """,
-              {
-                  'id': id_registro,
-                  'nombre_apellido': nombre_apellido.get(),
-                  'profesor': profesor.get(),
-                  'curso': curso.get(),
-                  'herramientas': herramientas_valores
-              })
-
+    c.execute("UPDATE Registros SET Alumno = ?, Profesor = ?, Curso = ?, Herramientas = ? WHERE rowid = ?", (
+        nombre_apellido.get(),
+        profesor.get(),
+        curso.get(),
+        herramientas.get("1.0", END).strip(),
+        registro_id
+    ))
     conn.commit()
     conn.close()
+    nombre_apellido.delete(0, END)
+    profesor.delete(0, END)
+    curso.delete(0, END)
+    herramientas.delete("1.0", END)
+    messagebox.showinfo("Actualización exitosa", "Datos actualizados correctamente")
     mostrar_registros()
+    boton_editar.config(state=DISABLED)
 
 
 app = Tk()
@@ -146,7 +142,7 @@ frame_botones.pack()
 
 boton_registrar = Button(frame_botones, text="AGREGAR", height=2, width=15, font=("helvetica", 12), bg="green", fg="white", command=agregar)
 boton_registrar.grid(row=0, column=0)
-boton_editar = Button(frame_botones, text="EDITAR", height=2, width=15, font=("helvetica", 12), bg="gray", fg="white", command=actualizar_registro)
+boton_editar = Button(frame_botones, text="EDITAR", height=2, width=15, font=("helvetica", 12), bg="gray", fg="white", state=DISABLED)
 boton_editar.grid(row=0, column=1)
 boton_eliminar = Button(frame_botones, text="ELIMINAR", width=15, height=2, font=("helvetica", 12), bg="red", fg="white", command=eliminar)
 boton_eliminar.grid(row=0, column=2)
@@ -164,6 +160,7 @@ tree.column("Curso", width=150)
 tree.column("Herramientas", width=300)
 tree.pack(pady=20)
 
+tree.bind("<Double-1>", cargar_registro)
 
 mostrar_registros()
 app.mainloop()
