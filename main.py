@@ -153,7 +153,7 @@ tree.heading("Alumno", text="Alumno")
 tree.heading("Profesor", text="Profesor")
 tree.heading("Curso", text="Curso")
 tree.heading("Herramientas", text="Herramientas")
-tree.column("ID", width=50)
+tree.column("ID", width=10)
 tree.column("Alumno", width=200)
 tree.column("Profesor", width=200)
 tree.column("Curso", width=150)
@@ -161,6 +161,13 @@ tree.column("Herramientas", width=300)
 tree.pack(pady=20)
 
 tree.bind("<Double-1>", cargar_registro)
+
+scrollbar = ttk.Scrollbar(app)
+tree.config(yscrollcommand=scrollbar.set)
+scrollbar.config(command=tree.yview)
+
+tree.pack(side=LEFT, fill= BOTH, expand=True)
+scrollbar.pack(side=RIGHT, fill=Y)
 
 mostrar_registros()
 app.mainloop()
