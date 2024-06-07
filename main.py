@@ -134,7 +134,7 @@ marco_herramientas.pack(pady=20, padx=200)
 
 lbl_herramientas = Label(marco_herramientas, text="Herramientas", font=("helvetica", 15, "bold"))
 lbl_herramientas.grid(row=1, column=0, pady=5, padx=8)
-herramientas = Text(marco_herramientas, width=50, height=10, font=("helvetica", 12), border=5)
+herramientas = Text(marco_herramientas, width=30, height=10, font=("helvetica", 12), border=5)
 herramientas.grid(row=1, column=1, padx=15, pady=10)
 
 frame_botones = LabelFrame(app)
@@ -153,7 +153,7 @@ tree.heading("Alumno", text="Alumno")
 tree.heading("Profesor", text="Profesor")
 tree.heading("Curso", text="Curso")
 tree.heading("Herramientas", text="Herramientas")
-tree.column("ID", width=10)
+tree.column("ID", width=2)
 tree.column("Alumno", width=200)
 tree.column("Profesor", width=200)
 tree.column("Curso", width=150)
@@ -162,11 +162,13 @@ tree.pack(pady=20)
 
 tree.bind("<Double-1>", cargar_registro)
 
+# Crear Scrollbar vertical
 scrollbar = ttk.Scrollbar(app)
 tree.config(yscrollcommand=scrollbar.set)
 scrollbar.config(command=tree.yview)
 
-tree.pack(side=LEFT, fill= BOTH, expand=True)
+# Empaquetamos la barra vertical y lo colocamos en el lugar correcot
+tree.pack(side=LEFT, fill=BOTH, expand=True)
 scrollbar.pack(side=RIGHT, fill=Y)
 
 mostrar_registros()
