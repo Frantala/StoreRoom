@@ -103,7 +103,7 @@ def editar_registro(registro_id):
 
 
 app = Tk()
-app.title("Registro de Herramientas")
+app.title("ToolCheck")
 
 titulo = Label(app, text="REGISTRO DE HERRAMIENTAS", fg="black", font=("helvetica", 17, "bold"), pady=10)
 titulo.pack()
