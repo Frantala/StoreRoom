@@ -2,6 +2,11 @@ import sqlite3
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+from PIL import Image, ImageTk
+import cv2
+import numpy as np
+import tensorflow as tf
+from tensorflow import keras 
 
 # Crear o conectar a una base de datos
 conn = sqlite3.connect('Proyecto-Escuela')
@@ -101,6 +106,37 @@ def editar_registro(registro_id):
     mostrar_registros()
     boton_editar.config(state=DISABLED)
 
+# Cargar el modelo de Teachable Machine
+model_path = 'model.savedmodel'
+model = tf.keras.models.load_model(model_path)
+
+# Asegúrate de que las etiquetas coincidan con tu modelo
+labels = ["Llave taller", "Destornillador"]  # Modifica estas etiquetas según tu modelo
+
+def capturar_imagen():
+    ret, frame = cap.read()
+    if ret:
+        cv2.imwrite('captured_image.jpg', frame)
+        messagebox.showinfo("Información", "Imagen capturada")
+        reconocer_herramientas('captured_image.jpg')
+
+def reconocer_herramientas(image_path):
+    # Cargar la imagen y preprocesarla para el modelo
+    image = cv2.imread(image_path)
+    image_resized = cv2.resize(image, (224, 224))
+    image_normalized = image_resized / 255.0
+    image_array = np.array(image_normalized).reshape(-1, 224, 224, 3)
+
+    # Realizar la predicción
+    predictions = model.predict(image_array)
+    predicted_class = np.argmax(predictions[0])
+    
+    # Cargar etiquetas (asegúrate de que coincidan con tu modelo)
+    labels = ["Herramienta1", "Herramienta2", "Herramienta3"]  # Modifica estas etiquetas según tu modelo
+    herramienta_detectada = labels[predicted_class]
+
+    # Insertar datos en el Treeview
+    tree.insert("", END, values=(nombre_apellido.get(), herramienta_detectada))
 
 app = Tk()
 app.title("ToolCheck")
@@ -172,4 +208,12 @@ tree.pack(side=LEFT, fill=BOTH, expand=True)
 scrollbar.pack(side=RIGHT, fill=Y)
 
 mostrar_registros()
+# Inicializar la captura de video
+cap = cv2.VideoCapture(0)
+boton_captura = Button(frame_botones, text="Capturar Imagen", height=2, width=15, font=("helvetica", 12), bg="blue", fg="white", command=capturar_imagen)
+boton_captura.grid(row=0, column=3)
 app.mainloop()
+
+# Liberar la captura de video al cerrar la aplicación
+cap.release()
+cv2.destroyAllWindows()
