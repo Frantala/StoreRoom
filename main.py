@@ -2,6 +2,8 @@ import sqlite3
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+import cv2
+from pyzbar.pyzbar import decode
 
 # Crear o conectar a una base de datos
 conn = sqlite3.connect('Proyecto-Escuela')
@@ -101,8 +103,50 @@ def editar_registro(registro_id):
     mostrar_registros()
     boton_editar.config(state=DISABLED)
 
+def scan_qr():
+    cap = cv2.VideoCapture(0)
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        decoded_objects = decode(frame)
+        for obj in decoded_objects:
+            qr_data = obj.data.decode('utf-8')
+            herramienta = qr_data  # Asumimos que qr_data contiene solo el identificador de la herramienta
+            alumno = nombre_apellido.get()  # Obtenemos el nombre del alumno de la entrada de texto
+
+            # Verificamos que el nombre del alumno no esté vacío
+            if alumno:
+                conn = sqlite3.connect('Proyecto-Escuela')
+                c = conn.cursor()
+                c.execute("INSERT INTO Registros (Alumno, Profesor, Curso, Herramientas) VALUES (?, ?, ?, ?)", (
+                    alumno,
+                    profesor.get(),
+                    curso.get(),
+                    herramienta
+                ))
+                conn.commit()
+                conn.close()
+                mostrar_registros()
+                cap.release()
+                cv2.destroyAllWindows()
+                return
+            else:
+                messagebox.showwarning("Advertencia", "Por favor, ingrese el nombre del alumno antes de escanear.")
+                cap.release()
+                cv2.destroyAllWindows()
+                return
+
+        cv2.imshow("Escanear QR", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
 app = Tk()
-app.title("ToolCheck")
+app.title("StoreRoom")
 
 titulo = Label(app, text="REGISTRO DE HERRAMIENTAS", fg="black", font=("helvetica", 17, "bold"), pady=10)
 titulo.pack()
@@ -135,6 +179,8 @@ lbl_herramientas = Label(marco_herramientas, text="Herramientas", font=("helveti
 lbl_herramientas.grid(row=1, column=0, pady=5, padx=8)
 herramientas = Text(marco_herramientas, width=30, height=10, font=("helvetica", 12), border=5)
 herramientas.grid(row=1, column=1, padx=15, pady=10)
+boton_camara = Button(marco_herramientas, text="Escanear Codigo", font=("helvetica", 12), border=5, bg="gray", fg="white", command=scan_qr)
+boton_camara.grid(row=2, column=1, padx=15, pady=10)
 
 frame_botones = LabelFrame(app)
 frame_botones.pack()
