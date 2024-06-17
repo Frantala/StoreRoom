@@ -103,6 +103,10 @@ def editar_registro(registro_id):
     mostrar_registros()
     boton_editar.config(state=DISABLED)
 
+    def buscar():
+        busqueda = filtrar_registros.get()
+        mostrar_registros(busqueda)
+
 def scan_qr():
     cap = cv2.VideoCapture(0)
     while True:
@@ -191,6 +195,10 @@ boton_editar = Button(frame_botones, text="EDITAR", height=2, width=15, font=("h
 boton_editar.grid(row=0, column=1)
 boton_eliminar = Button(frame_botones, text="ELIMINAR", width=15, height=2, font=("helvetica", 12), bg="red", fg="white", command=eliminar)
 boton_eliminar.grid(row=0, column=2)
+filtrar_registros = Entry(frame_botones, width=40, border=5,font=("helvetica", 12))
+filtrar_registros.grid(row=0, column=4, padx=15)
+boton_filtrar = Button(frame_botones, text="Filtrar", font=("helvetica", 12))
+boton_filtrar.grid(row=0, column=5, padx=5)
 
 tree = ttk.Treeview(app, columns=("ID", "Alumno", "Profesor", "Curso", "Herramientas"), show="headings", height=20)
 tree.heading("ID", text="ID")
