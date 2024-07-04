@@ -24,14 +24,14 @@ def agregar():
     conn = sqlite3.connect('Proyecto-Escuela')
     c = conn.cursor()
     c.execute("INSERT INTO Registros (Alumno, Profesor, Curso, Herramientas) VALUES (?, ?, ?, ?)", (
-        nombre_apellido.get(),
+        alumno.get(),
         profesor.get(),
         curso.get(),
         herramientas.get("1.0", END).strip()
     ))
     conn.commit()
     conn.close()
-    nombre_apellido.delete(0, END)
+    alumno.delete(0, END)
     profesor.delete(0, END)
     curso.delete(0, END)
     herramientas.delete("1.0", END)
@@ -72,8 +72,8 @@ def cargar_registro(event):
     if seleccionado:
         item = tree.item(seleccionado)
         registro_id = item['values'][0]
-        nombre_apellido.delete(0, END)
-        nombre_apellido.insert(END, item['values'][1])
+        alumno.delete(0, END)
+        alumno.insert(END, item['values'][1])
         profesor.delete(0, END)
         profesor.insert(END, item['values'][2])
         curso.delete(0, END)
@@ -87,7 +87,7 @@ def editar_registro(registro_id):
     conn = sqlite3.connect('Proyecto-Escuela')
     c = conn.cursor()
     c.execute("UPDATE Registros SET Alumno = ?, Profesor = ?, Curso = ?, Herramientas = ? WHERE rowid = ?", (
-        nombre_apellido.get(),
+        alumno.get(),
         profesor.get(),
         curso.get(),
         herramientas.get("1.0", END).strip(),
@@ -95,7 +95,7 @@ def editar_registro(registro_id):
     ))
     conn.commit()
     conn.close()
-    nombre_apellido.delete(0, END)
+    alumno.delete(0, END)
     profesor.delete(0, END)
     curso.delete(0, END)
     herramientas.delete("1.0", END)
@@ -103,8 +103,17 @@ def editar_registro(registro_id):
     mostrar_registros()
     boton_editar.config(state=DISABLED)
 
-    def buscar():
-        busqueda = filtrar_registros.get()
+def buscar_registro():
+    busqueda = filtrar_registros.get()
+    for item in tree.get_children():
+        item_data = tree.item(item)["values"]
+        if busqueda in item_data[1].lower():
+            tree.selection_set(item)
+            tree.focus(item)
+            tree.see(item)
+            return
+        messagebox.showinfo("Búsqueda", f"No se encontró ningún alumno con el nombre: {busqueda}")
+
         mostrar_registros(busqueda)
 
 def scan_qr():
@@ -118,7 +127,7 @@ def scan_qr():
         for obj in decoded_objects:
             qr_data = obj.data.decode('utf-8')
             herramienta = qr_data  # Asumimos que qr_data contiene solo el identificador de la herramienta
-            alumno = nombre_apellido.get()  # Obtenemos el nombre del alumno de la entrada de texto
+            alumno = alumno.get()  # Obtenemos el nombre del alumno de la entrada de texto
 
             # Verificamos que el nombre del alumno no esté vacío
             if alumno:
@@ -158,12 +167,11 @@ titulo.pack()
 marco = LabelFrame(app, text="Datos del Estudiante", font=("helvetica", 20, "bold"), pady=5)
 marco.config(bd=2)
 marco.pack()
-
-lbl_nombre_apellido = Label(marco, text="Alumno", font=("helvetica", 15, "bold"))
-lbl_nombre_apellido.grid(row=1, column=0, sticky="s", pady=5, padx=8)
-nombre_apellido = Entry(marco, width=40, border=5, font=("helvetica", 12))
-nombre_apellido.grid(row=1, column=1, pady=5, padx=100)
-nombre_apellido.focus()
+lbl_alumno = Label(marco, text="Alumno", font=("helvetica", 15, "bold"))
+lbl_alumno.grid(row=1, column=0, sticky="s", pady=5, padx=8)
+alumno = Entry(marco, width=40, border=5, font=("helvetica", 12))
+alumno.grid(row=1, column=1, pady=5, padx=100)
+alumno.focus()
 
 lbl_profesor = Label(marco, text="Profesor", font=("helvetica", 15, "bold"))
 lbl_profesor.grid(row=2, column=0, sticky="s", pady=5, padx=8)
@@ -197,7 +205,7 @@ boton_eliminar = Button(frame_botones, text="ELIMINAR", width=15, height=2, font
 boton_eliminar.grid(row=0, column=2)
 filtrar_registros = Entry(frame_botones, width=40, border=5,font=("helvetica", 12))
 filtrar_registros.grid(row=0, column=4, padx=15)
-boton_filtrar = Button(frame_botones, text="Filtrar", font=("helvetica", 12))
+boton_filtrar = Button(frame_botones, text="Filtrar", font=("helvetica", 12), command=buscar_registro)
 boton_filtrar.grid(row=0, column=5, padx=5)
 
 tree = ttk.Treeview(app, columns=("ID", "Alumno", "Profesor", "Curso", "Herramientas"), show="headings", height=20)
