@@ -4,6 +4,7 @@ from tkinter import ttk
 from tkinter import messagebox
 import cv2
 from pyzbar.pyzbar import decode
+import qrcode
 
 # Crear o conectar a una base de datos
 conn = sqlite3.connect('Proyecto-Escuela')
@@ -103,19 +104,6 @@ def editar_registro(registro_id):
     mostrar_registros()
     boton_editar.config(state=DISABLED)
 
-def buscar_registro():
-    busqueda = filtrar_registros.get()
-    for item in tree.get_children():
-        item_data = tree.item(item)["values"]
-        if busqueda in item_data[1].lower():
-            tree.selection_set(item)
-            tree.focus(item)
-            tree.see(item)
-            return
-        messagebox.showinfo("Búsqueda", f"No se encontró ningún alumno con el nombre: {busqueda}")
-
-        mostrar_registros(busqueda)
-
 def scan_qr():
     cap = cv2.VideoCapture(0)
     while True:
@@ -127,17 +115,17 @@ def scan_qr():
         for obj in decoded_objects:
             qr_data = obj.data.decode('utf-8')
             herramienta = qr_data  # Asumimos que qr_data contiene solo el identificador de la herramienta
-            alumno = alumno.get()  # Obtenemos el nombre del alumno de la entrada de texto
+            alumno = alumno.get() # Obtenemos el nombre del alumno de la entrada de texto
 
             # Verificamos que el nombre del alumno no esté vacío
             if alumno:
                 conn = sqlite3.connect('Proyecto-Escuela')
                 c = conn.cursor()
                 c.execute("INSERT INTO Registros (Alumno, Profesor, Curso, Herramientas) VALUES (?, ?, ?, ?)", (
-                    alumno,
+                    alumno.get(),
                     profesor.get(),
                     curso.get(),
-                    herramienta
+                    herramienta.get()
                 ))
                 conn.commit()
                 conn.close()
@@ -203,10 +191,7 @@ boton_editar = Button(frame_botones, text="EDITAR", height=2, width=15, font=("h
 boton_editar.grid(row=0, column=1)
 boton_eliminar = Button(frame_botones, text="ELIMINAR", width=15, height=2, font=("helvetica", 12), bg="red", fg="white", command=eliminar)
 boton_eliminar.grid(row=0, column=2)
-filtrar_registros = Entry(frame_botones, width=40, border=5,font=("helvetica", 12))
-filtrar_registros.grid(row=0, column=4, padx=15)
-boton_filtrar = Button(frame_botones, text="Filtrar", font=("helvetica", 12), command=buscar_registro)
-boton_filtrar.grid(row=0, column=5, padx=5)
+
 
 tree = ttk.Treeview(app, columns=("ID", "Alumno", "Profesor", "Curso", "Herramientas"), show="headings", height=20)
 tree.heading("ID", text="ID")
