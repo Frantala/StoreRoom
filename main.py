@@ -1,10 +1,8 @@
 import sqlite3
+import speech_recognition as sr
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-import cv2
-from pyzbar.pyzbar import decode
-import qrcode
 
 # Crear o conectar a una base de datos
 conn = sqlite3.connect('Proyecto-Escuela')
@@ -104,47 +102,23 @@ def editar_registro(registro_id):
     mostrar_registros()
     boton_editar.config(state=DISABLED)
 
-def scan_qr():
-    cap = cv2.VideoCapture(0)
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
+# LE AGREGAMOS LA FUNCIONALIDAD DE VOZ A LA APLICACION 
+# creamos una funcion para eso 
+def reconocer_voz():
+    reconocedor = sr.Recognizer() # llamamos a la clase para traer la mayoria de las funcionalidades de la biblioteca
+    with sr.Microphone() as fuente: #Ingresamos el microfono como funte para captar todo lo que dice el usuario
+        messagebox.showinfo("Escuchando", "Por favor, hable ahora...")
+        reconocedor.adjust_for_ambient_noise(fuente) # Ajustamos para que se escuche a pesar de los ruidos exteriores
+        audio = reconocedor.listen(fuente)
 
-        decoded_objects = decode(frame)
-        for obj in decoded_objects:
-            qr_data = obj.data.decode('utf-8')
-            herramienta = qr_data  # Asumimos que qr_data contiene solo el identificador de la herramienta
-            alumno = alumno.get() # Obtenemos el nombre del alumno de la entrada de texto
+        try:
+            texto = reconocedor.recognize_google(audio, language='es-ES') #usamos la api de google para escuchar el cambiar idioma
+            herramientas.insert(END, texto + '\n')
+        except sr.UnknownValueError:
+            messagebox.showerror("Error", "No se pudo entender el audio")
+        except sr.RequestError as e:
+            messagebox.showerror("Error", f"Error al solicitar resultados; {e}")
 
-            # Verificamos que el nombre del alumno no esté vacío
-            if alumno:
-                conn = sqlite3.connect('Proyecto-Escuela')
-                c = conn.cursor()
-                c.execute("INSERT INTO Registros (Alumno, Profesor, Curso, Herramientas) VALUES (?, ?, ?, ?)", (
-                    alumno.get(),
-                    profesor.get(),
-                    curso.get(),
-                    herramienta.get()
-                ))
-                conn.commit()
-                conn.close()
-                mostrar_registros()
-                cap.release()
-                cv2.destroyAllWindows()
-                return
-            else:
-                messagebox.showwarning("Advertencia", "Por favor, ingrese el nombre del alumno antes de escanear.")
-                cap.release()
-                cv2.destroyAllWindows()
-                return
-
-        cv2.imshow("Escanear QR", frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
 
 app = Tk()
 app.title("StoreRoom")
@@ -179,8 +153,8 @@ lbl_herramientas = Label(marco_herramientas, text="Herramientas", font=("helveti
 lbl_herramientas.grid(row=1, column=0, pady=5, padx=8)
 herramientas = Text(marco_herramientas, width=30, height=10, font=("helvetica", 12), border=5)
 herramientas.grid(row=1, column=1, padx=15, pady=10)
-boton_camara = Button(marco_herramientas, text="Escanear Codigo", font=("helvetica", 12), border=5, bg="gray", fg="white", command=scan_qr)
-boton_camara.grid(row=2, column=1, padx=15, pady=10)
+boton_voz = Button(marco_herramientas, text="Utililar Voz", font=("helvetica", 12), border=5, bg="gray", fg="white", command=reconocer_voz)
+boton_voz.grid(row=2, column=1, padx=15, pady=10)
 
 frame_botones = LabelFrame(app)
 frame_botones.pack()
