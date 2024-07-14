@@ -191,5 +191,6 @@ scrollbar.config(command=tree.yview)
 tree.pack(side=LEFT, fill=BOTH, expand=True)
 scrollbar.pack(side=RIGHT, fill=Y)
 
+
 mostrar_registros()
 app.mainloop()
