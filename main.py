@@ -1,5 +1,6 @@
 import sqlite3
 import speech_recognition as sr
+import threading
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -105,19 +106,22 @@ def editar_registro(registro_id):
 # LE AGREGAMOS LA FUNCIONALIDAD DE VOZ A LA APLICACION 
 # creamos una funcion para eso 
 def reconocer_voz():
-    reconocedor = sr.Recognizer() # llamamos a la clase para traer la mayoria de las funcionalidades de la biblioteca
-    with sr.Microphone() as fuente: #Ingresamos el microfono como funte para captar todo lo que dice el usuario
-        messagebox.showinfo("Escuchando", "Por favor, hable ahora...")
-        reconocedor.adjust_for_ambient_noise(fuente) # Ajustamos para que se escuche a pesar de los ruidos exteriores
-        audio = reconocedor.listen(fuente)
-
-        try:
-            texto = reconocedor.recognize_google(audio, language='es-ES') #usamos la api de google para escuchar el cambiar idioma
-            herramientas.insert(END, texto + '\n')
-        except sr.UnknownValueError:
-            messagebox.showerror("Error", "No se pudo entender el audio")
-        except sr.RequestError as e:
-            messagebox.showerror("Error", f"Error al solicitar resultados; {e}")
+    def worker():
+        reconocedor = sr.Recognizer()
+        with sr.Microphone() as fuente:
+            try:
+                messagebox.showinfo("Escuchando", "Por favor, hable ahora...")
+                reconocedor.adjust_for_ambient_noise(fuente)
+                audio = reconocedor.listen(fuente)
+                texto = reconocedor.recognize_google(audio, language='es-ES')
+                herramientas.insert(END, texto + '\n')
+            except sr.UnknownValueError:
+                messagebox.showerror("Error", "No se pudo entender el audio")
+            except sr.RequestError as e:
+                messagebox.showerror("Error", f"Error al solicitar resultados; {e}")
+    
+        hilo = threading.Thread(target=worker)
+        hilo.start()
 
 
 app = Tk()
