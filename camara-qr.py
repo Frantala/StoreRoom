@@ -12,7 +12,8 @@ herramientas = ["Martillo",
                 "Gafas", 
                 "Guantes", 
                 "Amoladora", 
-                "Augereadoras"]
+                "Augereadoras",
+                "yaqui"]
 
 # Generar códigos QR para cada herramienta
 for herramienta in herramientas:
@@ -52,7 +53,7 @@ def decode_qr(frame):
 
 def main():
     # Capturar video desde la cámara
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -64,6 +65,5 @@ def main():
             break
     cap.release()
     cv2.destroyAllWindows()
-
 if __name__ == "__main__":
     main()
