@@ -106,22 +106,19 @@ def editar_registro(registro_id):
 # LE AGREGAMOS LA FUNCIONALIDAD DE VOZ A LA APLICACION 
 # creamos una funcion para eso 
 def reconocer_voz():
-    def worker():
-        reconocedor = sr.Recognizer()
-        with sr.Microphone() as fuente:
-            try:
-                messagebox.showinfo("Escuchando", "Por favor, hable ahora...")
-                reconocedor.adjust_for_ambient_noise(fuente)
-                audio = reconocedor.listen(fuente)
-                texto = reconocedor.recognize_google(audio, language='es-ES')
-                herramientas.insert(END, texto + '\n')
-            except sr.UnknownValueError:
-                messagebox.showerror("Error", "No se pudo entender el audio")
-            except sr.RequestError as e:
-                messagebox.showerror("Error", f"Error al solicitar resultados; {e}")
-    
-        hilo = threading.Thread(target=worker)
-        hilo.start()
+    reconocedor = sr.Recognizer()
+    with sr.Microphone() as fuente:
+        messagebox.showinfo("Escuchando", "Por favor, hable ahora...")
+        reconocedor.adjust_for_ambient_noise(fuente)
+        audio = reconocedor.listen(fuente)
+
+        try:
+            texto = reconocedor.recognize_google(audio, language='es-ES')
+            herramientas.insert(END, texto + '\n')
+        except sr.UnknownValueError:
+            messagebox.showerror("Error", "No se pudo entender el audio")
+        except sr.RequestError as e:
+            messagebox.showerror("Error", f"Error al solicitar resultados; {e}")
 
 
 app = Tk()
@@ -157,7 +154,7 @@ lbl_herramientas = Label(marco_herramientas, text="Herramientas", font=("helveti
 lbl_herramientas.grid(row=1, column=0, pady=5, padx=8)
 herramientas = Text(marco_herramientas, width=30, height=10, font=("helvetica", 12), border=5)
 herramientas.grid(row=1, column=1, padx=15, pady=10)
-boton_voz = Button(marco_herramientas, text="Utililar Voz", font=("helvetica", 12), border=5, bg="gray", fg="white", command=reconocer_voz)
+boton_voz = Button(marco_herramientas, text="Utilizar Voz", font=("helvetica", 12), border=5, bg="gray", fg="white", command=reconocer_voz)
 boton_voz.grid(row=2, column=1, padx=15, pady=10)
 
 frame_botones = LabelFrame(app)
