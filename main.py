@@ -120,6 +120,17 @@ def reconocer_voz():
         except sr.RequestError as e:
             messagebox.showerror("Error", f"Error al solicitar resultados; {e}")
 
+def filtrar_registros():
+    filtro = filtrar.get().strip()
+    for row in tree.get_children():
+        tree.delete(row)
+    conn = sqlite3.connect('Proyecto-Escuela')
+    c = conn.cursor()
+    c.execute("SELECT rowid, Alumno, Profesor, Curso, Herramientas FROM Registros WHERE Alumno LIKE ? OR Profesor LIKE ? OR Curso LIKE ? OR Herramientas LIKE ?", ('%' + filtro + '%', '%' + filtro + '%', '%' + filtro + '%', '%' + filtro + '%'))
+    registros = c.fetchall()
+    for registro in registros:
+        tree.insert("", END, values=registro)
+    conn.close()
 
 app = Tk()
 app.title("StoreRoom")
@@ -167,6 +178,17 @@ boton_editar.grid(row=0, column=1)
 boton_eliminar = Button(frame_botones, text="ELIMINAR", width=15, height=2, font=("helvetica", 12), bg="red", fg="white", command=eliminar)
 boton_eliminar.grid(row=0, column=2)
 
+# Creamos un frame/espacio para filtrar registros es decir buscar por nombre de profesor
+
+frame_filtrar = LabelFrame(app, width=50, height=50)
+frame_filtrar.pack(pady=15)
+
+lbl_filtrar = Label(frame_filtrar, text="Buscar Registros", font=("helvetica", 12))
+lbl_filtrar.grid(row=0, column=0)
+filtrar = Entry(frame_filtrar, width=50, font=("helvetica", 10), borderwidth=5)
+filtrar.grid(row=0, column=1, padx=10)
+btn_filtrar = Button(frame_filtrar, text="Buscar", font=("helvetica", 12), command=filtrar_registros)
+btn_filtrar.grid(row=0, column=2, padx=10)
 
 tree = ttk.Treeview(app, columns=("ID", "Alumno", "Profesor", "Curso", "Herramientas"), show="headings", height=20)
 tree.heading("ID", text="ID")
