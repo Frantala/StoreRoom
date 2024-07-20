@@ -113,7 +113,7 @@ def reconocer_voz():
         audio = reconocedor.listen(fuente)
 
         try:
-            texto = reconocedor.recognize_google(audio, language='es-ES')
+            texto = reconocedor.recognize_google(audio, language='es-ES', )
             herramientas.insert(END, texto + '\n')
         except sr.UnknownValueError:
             messagebox.showerror("Error", "No se pudo entender el audio")
