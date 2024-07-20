@@ -53,7 +53,7 @@ def decode_qr(frame):
 
 def main():
     # Capturar video desde la cámara
-    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     while True:
         ret, frame = cap.read()
         if not ret:
