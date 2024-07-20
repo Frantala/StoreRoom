@@ -106,22 +106,23 @@ def editar_registro(registro_id):
 # LE AGREGAMOS LA FUNCIONALIDAD DE VOZ A LA APLICACION 
 # creamos una funcion para eso 
 def reconocer_voz():
-    reconocedor = sr.Recognizer()
+    reconocedor = sr.Recognizer() #Creamos la clase para reconocer el sonido
     with sr.Microphone() as fuente:
         messagebox.showinfo("Escuchando", "Por favor, hable ahora...")
-        reconocedor.adjust_for_ambient_noise(fuente)
-        audio = reconocedor.listen(fuente)
+        reconocedor.adjust_for_ambient_noise(fuente) #ajustamos el sonido para el ambiente 
+        audio = reconocedor.listen(fuente) #escuchamso en "vivo" el audio
 
         try:
-            texto = reconocedor.recognize_google(audio, language='es-ES', )
-            herramientas.insert(END, texto + '\n')
+            texto = reconocedor.recognize_google(audio, language='es-ES') #llamamos a la API de google Search con el idioma en español
+            herramientas.insert(END, texto + '\n') #insertamos el texto escuchado y transcripto a la tabla
         except sr.UnknownValueError:
             messagebox.showerror("Error", "No se pudo entender el audio")
         except sr.RequestError as e:
             messagebox.showerror("Error", f"Error al solicitar resultados; {e}")
 
+# Funcion para filtrar los registros en la tabla
 def filtrar_registros():
-    filtro = filtrar.get().strip()
+    filtro = filtrar.get().strip() #los obtenemos y lo ordenamos 
     for row in tree.get_children():
         tree.delete(row)
     conn = sqlite3.connect('Proyecto-Escuela')
