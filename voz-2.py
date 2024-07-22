@@ -1,46 +1,35 @@
-import sounddevice as sd
-import numpy as np
-import whisper
-import queue
-import threading
+import speech_recognition as sr
+import subprocess
+import pyautogui 
 
-# Cargar el modelo Whisper
-model = whisper.load_model("tiny")
+reccognizer = sr.Recognizer()
+proceso = None
+saludo = """
+Agragando alumno...
+"""
 
-# Configuración de la grabación de audio
-samplerate = 16000  # 16 kHz
-blocksize = 1600  # Aproximadamente 0.1 segundos de audio
-channels = 1
+def ejecutar_comando(comando):
+    global proceso
+    if "abrir archivo" in comando:
+        proceso = subprocess.Popen(["notepad.exe"])
+    elif "saludar" in comando:
+        pyautogui.write(saludo)
+    elif "cerrar archivo" in comando:
+        proceso.terminate()
 
-# Cola para manejar los datos de audio
-audio_queue = queue.Queue()
+def escuchar_comandos():
+    with sr.Microphone() as source:
+        print("en que te puedo ayudar...")
+        reccognizer.adjust_for_ambient_noise(source)
+        audio = reccognizer.listen(source)
+    try:
+        comando = reccognizer.recognize_google(audio, language="es-ES")
+        print(f"comando reconocido: {comando}")
+        ejecutar_comando(comando)
+    except sr.UnknownValueError:
+        print("no se pudo reconocer el audio")
+    except sr.RequestError as e:
+        print(f"error al realizar la solicitud {e}")
 
-def audio_callback(indata, frames, time, status):
-    """Función de callback que coloca los datos de audio en la cola"""
-    if status:
-        print(status)
-    audio_queue.put(indata.copy())
-
-def process_audio():
-    """Procesa los datos de audio en la cola y obtiene la transcripción"""
-    while True:
-        audio_data = audio_queue.get()
-        audio_data = audio_data.flatten().astype(np.float32) / 32768.0
-        result = model.transcribe(audio_data, fp16=False)
-        print(f'Transcripción: {result["text"]}')
-
-# Abrir un stream de audio
-stream = sd.InputStream(samplerate=samplerate, blocksize=blocksize, channels=channels, callback=audio_callback)
-
-print("Grabando... Presiona Ctrl+C para detener.")
-try:
-    # Iniciar un hilo para procesar el audio
-    threading.Thread(target=process_audio, daemon=True).start()
-    with stream:
-        while True:
-            sd.sleep(1000)  # Duerme por 1 segundo y luego continúa
-except KeyboardInterrupt:
-    print("Finalizando grabación.")
-finally:
-    stream.close()
-
+while True:
+    escuchar_comandos()
