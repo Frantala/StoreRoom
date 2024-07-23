@@ -112,15 +112,9 @@ def reconocer_voz():
         messagebox.showinfo("Escuchando", "Por favor, hable ahora...")
         reconocedor.adjust_for_ambient_noise(fuente) #ajustamos el sonido para el ambiente 
         audio = reconocedor.listen(fuente) #escuchamso en "vivo" el audio
-        comando = None
-
         try:
             texto = reconocedor.recognize_google(audio, language='es-ES') #llamamos a la API de google Search con el idioma en español
-            if comando in texto == "alumno":
-                alumno.insert(END, texto)
-            else:
-                herramientas.insert(END, texto + '\n') #insertamos el texto escuchado y transcripto a la tabla
-
+            herramientas.insert(END, texto + '\n') #insertamos el texto escuchado y transcripto a la tabla
         except sr.UnknownValueError:
             messagebox.showerror("Error", "No se pudo entender el audio")
         except sr.RequestError as e:
