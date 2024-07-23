@@ -1,5 +1,6 @@
 import sqlite3
-import speech_recognition as sr
+import cv2
+from pyzbar.pyzbar import decode
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -102,21 +103,37 @@ def editar_registro(registro_id):
     mostrar_registros()
     boton_editar.config(state=DISABLED)
 
-# LE AGREGAMOS LA FUNCIONALIDAD DE VOZ A LA APLICACION 
+# LE AGREGAMOS LA FUNCIONALIDAD DE DETECTAR QRs A LA APLICACION 
 # creamos una funcion para eso
-def reconocer_voz():
-    reconocedor = sr.Recognizer() #Creamos la clase para reconocer el sonido
-    with sr.Microphone() as fuente:
-        messagebox.showinfo("Escuchando", "Por favor, hable ahora...")
-        reconocedor.adjust_for_ambient_noise(fuente) #ajustamos el sonido para el ambiente 
-        audio = reconocedor.listen(fuente) #escuchamso en "vivo" el audio
-        try:
-            texto = reconocedor.recognize_google(audio, language='es-ES') #llamamos a la API de google Search con el idioma en español
-            herramientas.insert(END, texto + '\n') #insertamos el texto escuchado y transcripto a la tabla
-        except sr.UnknownValueError:
-            messagebox.showerror("Error", "No se pudo entender el audio")
-        except sr.RequestError as e:
-            messagebox.showerror("Error", f"Error al solicitar resultados; {e}")
+def scan_qr():
+    def decode_qr(frame):
+        qr_codes = decode(frame)
+        for qr in qr_codes:
+            qr_data = qr.data.decode("utf-8")
+            x, y, w, h = qr.rect
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            cv2.putText(frame, qr_data, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            return qr_data
+        return None
+
+    cap = cv2.VideoCapture(0)
+    herramientas_qr = []
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        herramienta = decode_qr(frame)
+        if herramienta and herramienta not in herramientas_qr:
+            herramientas_qr.append(herramienta)
+            herramientas.insert(END, herramienta + "\n")
+
+        cv2.imshow("Escanear QR", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
 
 # Funcion para filtrar los registros en la tabla
 def filtrar_registros():
@@ -164,7 +181,7 @@ lbl_herramientas = Label(marco_herramientas, text="Herramientas", font=("helveti
 lbl_herramientas.grid(row=1, column=0, pady=5, padx=8)
 herramientas = Text(marco_herramientas, width=30, height=10, font=("helvetica", 12), border=5)
 herramientas.grid(row=1, column=1, padx=15, pady=10)
-boton_voz = Button(marco_herramientas, text="Utilizar Voz", font=("helvetica", 12), border=5, bg="gray", fg="white", command=reconocer_voz)
+boton_voz = Button(marco_herramientas, text="Utilizar Voz", font=("helvetica", 12), border=5, bg="gray", fg="white", command=scan_qr)
 boton_voz.grid(row=2, column=1, padx=15, pady=10)
 
 frame_botones = LabelFrame(app)

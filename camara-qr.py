@@ -37,35 +37,37 @@ for herramienta in herramientas:
 
 print("Códigos QR generados y guardados.")
 
-
-def decode_qr(frame):
+def decode_qr(frame, last_qr_data):
     # Detectar códigos QR en la imagen
     qr_codes = pyzbar.decode(frame)
     for qr in qr_codes:
         # Extraer los datos del QR
         qr_data = qr.data.decode("utf-8")
+        if qr_data != last_qr_data:  # Solo mostrar si el QR es diferente al último leído
+            print(qr_data)
+            last_qr_data = qr_data
         # Dibujar un rectángulo alrededor del QR
         x, y, w, h = qr.rect
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
         # Mostrar los datos del QR en la imagen
         cv2.putText(frame, qr_data, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-        herramienta = qr_data
-        print(herramienta)
-    return frame
+    return frame, last_qr_data
 
 def main():
     # Capturar video desde la cámara
-    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    last_qr_data = ""
     while True:
         ret, frame = cap.read()
         if not ret:
             break
         # Decodificar y mostrar el QR
-        frame = decode_qr(frame)
+        frame, last_qr_data = decode_qr(frame, last_qr_data)
         cv2.imshow("QR Code Scanner", frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cap.release()
     cv2.destroyAllWindows()
+
 if __name__ == "__main__":
     main()
