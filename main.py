@@ -1,7 +1,5 @@
 import sqlite3
 import speech_recognition as sr
-import subprocess
-import threading
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox

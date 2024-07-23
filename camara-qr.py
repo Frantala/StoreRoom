@@ -49,11 +49,13 @@ def decode_qr(frame):
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
         # Mostrar los datos del QR en la imagen
         cv2.putText(frame, qr_data, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+        herramienta = qr_data
+        print(herramienta)
     return frame
 
 def main():
     # Capturar video desde la cámara
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     while True:
         ret, frame = cap.read()
         if not ret:
