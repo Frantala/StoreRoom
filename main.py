@@ -1,5 +1,6 @@
 import sqlite3
 import speech_recognition as sr
+import subprocess
 import threading
 from tkinter import *
 from tkinter import ttk
@@ -104,7 +105,7 @@ def editar_registro(registro_id):
     boton_editar.config(state=DISABLED)
 
 # LE AGREGAMOS LA FUNCIONALIDAD DE VOZ A LA APLICACION 
-# creamos una funcion para eso 
+# creamos una funcion para eso
 def reconocer_voz():
     reconocedor = sr.Recognizer() #Creamos la clase para reconocer el sonido
     with sr.Microphone() as fuente:
