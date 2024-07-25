@@ -116,7 +116,7 @@ def scan_qr():
             return qr_data
         return None
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     herramientas_qr = []
     while True:
         ret, frame = cap.read()
@@ -126,7 +126,7 @@ def scan_qr():
         herramienta = decode_qr(frame)
         if herramienta and herramienta not in herramientas_qr:
             herramientas_qr.append(herramienta)
-            herramientas.insert(END, herramienta + "\n")
+            herramientas.insert(END, herramienta)
 
         cv2.imshow("Escanear QR", frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
