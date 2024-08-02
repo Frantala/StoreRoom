@@ -4,6 +4,7 @@ from pyzbar.pyzbar import decode
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+import pandas as pd
 
 # Crear o conectar a una base de datos
 conn = sqlite3.connect('Proyecto-Escuela')
@@ -163,6 +164,11 @@ alumno = Entry(marco, width=40, border=5, font=("helvetica", 12))
 alumno.grid(row=1, column=1, pady=5, padx=100)
 alumno.focus()
 
+
+# Haciendo un boton para guardar los datos en un Excel
+btn_excel = Button(app, text="Guardar como Excel", font=("helvetica", 12), bg="green")
+btn_excel.place(x=30, y=100)
+
 lbl_profesor = Label(marco, text="Profesor", font=("helvetica", 15, "bold"))
 lbl_profesor.grid(row=2, column=0, sticky="s", pady=5, padx=8)
 profesor = Entry(marco, width=40, border=5, font=("helvetica", 12))
@@ -181,7 +187,7 @@ lbl_herramientas = Label(marco_herramientas, text="Herramientas", font=("helveti
 lbl_herramientas.grid(row=1, column=0, pady=5, padx=8)
 herramientas = Text(marco_herramientas, width=30, height=10, font=("helvetica", 12), border=5)
 herramientas.grid(row=1, column=1, padx=15, pady=10)
-boton_voz = Button(marco_herramientas, text="Utilizar Voz", font=("helvetica", 12), border=5, bg="gray", fg="white", command=scan_qr)
+boton_voz = Button(marco_herramientas, text="Escanear QR", font=("helvetica", 12), border=5, bg="gray", fg="white", command=scan_qr)
 boton_voz.grid(row=2, column=1, padx=15, pady=10)
 
 frame_botones = LabelFrame(app)
