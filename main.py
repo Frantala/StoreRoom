@@ -5,6 +5,8 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 import pandas as pd
+import openpyxl
+import datetime
 
 # Crear o conectar a una base de datos
 conn = sqlite3.connect('Proyecto-Escuela')
@@ -149,6 +151,24 @@ def filtrar_registros():
         tree.insert("", END, values=registro)
     conn.close()
 
+# Creamos una funcion para obtener los datos del dia en la base de datos 
+def datos_del_dia():
+    # obtener la fecha actual 
+    hoy = datetime.datetime.now().date()
+    # conectar a la base de datos y obtener los registros del dia
+    conn = sqlite3.connect('Proyecto-Escuela')
+    c = conn.cursor()
+    c.execute("SELECT * FROM Registros WHERE date(timestamp) = ?", (hoy,))
+    registros_del_dia = c.fetchall()
+    conn.commit()
+    conn.close()
+
+    return registros_del_dia
+
+# Funcion para pasar todos los datos guardados en la treeview a un excel 
+def pasar_excel():
+    pass
+
 app = Tk()
 app.title("StoreRoom")
 
@@ -187,8 +207,8 @@ lbl_herramientas = Label(marco_herramientas, text="Herramientas", font=("helveti
 lbl_herramientas.grid(row=1, column=0, pady=5, padx=8)
 herramientas = Text(marco_herramientas, width=30, height=10, font=("helvetica", 12), border=5)
 herramientas.grid(row=1, column=1, padx=15, pady=10)
-boton_voz = Button(marco_herramientas, text="Escanear QR", font=("helvetica", 12), border=5, bg="gray", fg="white", command=scan_qr)
-boton_voz.grid(row=2, column=1, padx=15, pady=10)
+boton_qr = Button(marco_herramientas, text="Escanear QR", font=("helvetica", 12), border=5, bg="gray", fg="white", command=scan_qr)
+boton_qr.grid(row=2, column=1, padx=15, pady=10)
 
 frame_botones = LabelFrame(app)
 frame_botones.pack()
