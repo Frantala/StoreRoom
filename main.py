@@ -20,18 +20,28 @@ c.execute("""CREATE TABLE IF NOT EXISTS Registros (
     Curso text,
     Herramientas text
 )""")
+
+# Añadir la columna timestamp si no existe
+try:
+    c.execute("ALTER TABLE Registros ADD COLUMN timestamp TEXT")
+    conn.commit()
+except sqlite3.OperationalError:
+    # La columna ya existe
+    pass
 # Guardar los cambios y cerrar la conexión inicial
 conn.commit()
 conn.close()
 
 def agregar():
+    # Obtener la fecha y hora actuales
+    timestamp = datetime.datetime.now().isoformat()
     conn = sqlite3.connect('Proyecto-Escuela')
     c = conn.cursor()
     c.execute("INSERT INTO Registros (Alumno, Profesor, Curso, Herramientas) VALUES (?, ?, ?, ?)", (
         alumno.get(),
         profesor.get(),
         curso.get(),
-        herramientas.get("1.0", END).strip()
+        herramientas.get("1.0", END).strip(),
     ))
     conn.commit()
     conn.close()
@@ -155,7 +165,7 @@ def filtrar_registros():
 # Creamos una funcion para obtener los datos del dia en la base de datos 
 def datos_del_dia():
     # obtener la fecha actual 
-    hoy = datetime.datetime.now().date()
+    hoy = datetime.datetime.now().strftime("%Y-%m-%d")  # Formato "YYYY-MM-DD"
     # conectar a la base de datos y obtener los registros del dia
     conn = sqlite3.connect('Proyecto-Escuela')
     c = conn.cursor()
@@ -173,7 +183,7 @@ def pasar_excel():
 
     #convertir los datos del dia a un DataFrame en pandas 
     columnas = ["Nombre y Apellido", "Profesor", "Curso", "Herramientas"]
-    df = pd.DataFrame(data=registros, columns=columnas)
+    df = pd.DataFrame(registros, columns=columnas)
 
     file_path = filedialog.asksaveasfilename(defaultextension="xlsx", filetypes=[("Excel files", "*.xlsx")]) 
 
@@ -200,7 +210,7 @@ alumno.focus()
 
 
 # Haciendo un boton para guardar los datos en un Excel
-btn_excel = Button(app, text="Guardar como Excel", font=("helvetica", 12), bg="green")
+btn_excel = Button(app, text="Guardar como Excel", font=("helvetica", 12), bg="green", command=pasar_excel)
 btn_excel.place(x=30, y=100)
 
 lbl_profesor = Label(marco, text="Profesor", font=("helvetica", 15, "bold"))
