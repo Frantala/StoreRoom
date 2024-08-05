@@ -175,6 +175,14 @@ def pasar_excel():
     columnas = ["Nombre y Apellido", "Profesor", "Curso", "Herramientas"]
     df = pd.DataFrame(data=registros, columns=columnas)
 
+    file_path = filedialog.asksaveasfilename(defaultextension="xlsx", filetypes=[("Excel files", "*.xlsx")]) 
+
+    if file_path:
+        # Guardar DataFrame como archivo Excel
+        df.to_excel(file_path, index=False)
+        messagebox.showinfo("Exportación Exitosa", f"Los datos han sido exportados a {file_path}")
+
+
 app = Tk()
 app.title("StoreRoom")
 
