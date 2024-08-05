@@ -7,6 +7,7 @@ from tkinter import messagebox
 import pandas as pd
 import openpyxl
 import datetime
+from tkinter import filedialog
 
 # Crear o conectar a una base de datos
 conn = sqlite3.connect('Proyecto-Escuela')
@@ -167,7 +168,12 @@ def datos_del_dia():
 
 # Funcion para pasar todos los datos guardados en la treeview a un excel 
 def pasar_excel():
-    pass
+    #obtener los datos del dia
+    registros = datos_del_dia()
+
+    #convertir los datos del dia a un DataFrame en pandas 
+    columnas = ["Nombre y Apellido", "Profesor", "Curso", "Herramientas"]
+    df = pd.DataFrame(data=registros, columns=columnas)
 
 app = Tk()
 app.title("StoreRoom")
