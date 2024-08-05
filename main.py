@@ -117,7 +117,7 @@ def scan_qr():
             return qr_data
         return None
 
-    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     herramientas_qr = []
     while True:
         ret, frame = cap.read()
