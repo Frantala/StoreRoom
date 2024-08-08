@@ -33,15 +33,13 @@ conn.commit()
 conn.close()
 
 def agregar():
-    # Obtener la fecha y hora actuales
-    timestamp = datetime.datetime.now().isoformat()
     conn = sqlite3.connect('Proyecto-Escuela')
     c = conn.cursor()
     c.execute("INSERT INTO Registros (Alumno, Profesor, Curso, Herramientas) VALUES (?, ?, ?, ?)", (
         alumno.get(),
         profesor.get(),
         curso.get(),
-        herramientas.get("1.0", END).strip(),
+        herramientas.get("1.0", END).strip()
     ))
     conn.commit()
     conn.close()
@@ -165,7 +163,7 @@ def filtrar_registros():
 # Creamos una funcion para obtener los datos del dia en la base de datos 
 def datos_del_dia():
     # obtener la fecha actual 
-    hoy = datetime.datetime.now().strftime("%Y-%m-%d")  # Formato "YYYY-MM-DD"
+    hoy = datetime.datetime.now().strftime("%Y-%M-%D")  # Formato "YYYY-MM-DD"
     # conectar a la base de datos y obtener los registros del dia
     conn = sqlite3.connect('Proyecto-Escuela')
     c = conn.cursor()
@@ -174,6 +172,8 @@ def datos_del_dia():
     conn.commit()
     conn.close()
 
+    #verificar si hay datos obtenidos
+    print(registros_del_dia)
     return registros_del_dia
 
 # Funcion para pasar todos los datos guardados en la treeview a un excel 
@@ -181,9 +181,17 @@ def pasar_excel():
     #obtener los datos del dia
     registros = datos_del_dia()
 
+    print("cantidad de datos a exportar: ", len(registros))
+    # Si no hay registros, mostrar mensaje y salir
+    if not registros:
+        messagebox.showwarning("Sin Datos", "No hay datos para exportar.")
+        return
+    
     #convertir los datos del dia a un DataFrame en pandas 
-    columnas = ["Nombre y Apellido", "Profesor", "Curso", "Herramientas"]
-    df = pd.DataFrame(registros, columns=columnas)
+    df = pd.DataFrame(registros, columns=["ID", "Alumno", "Profesor", "Curso", "Herramientas", "Fecha"])
+    df.to_excel("Registros_Dia.xlsx", index=False)
+    messagebox.showwarning("Datos guardados de forma exitosa!!")
+'''
 
     file_path = filedialog.asksaveasfilename(defaultextension="xlsx", filetypes=[("Excel files", "*.xlsx")]) 
 
@@ -191,7 +199,7 @@ def pasar_excel():
         # Guardar DataFrame como archivo Excel
         df.to_excel(file_path, index=False)
         messagebox.showinfo("Exportación Exitosa", f"Los datos han sido exportados a {file_path}")
-
+'''
 
 app = Tk()
 app.title("StoreRoom")
