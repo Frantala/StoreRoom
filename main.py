@@ -179,7 +179,7 @@ def datos_del_dia():
 # Funcion para pasar todos los datos guardados en la treeview a un excel 
 def pasar_excel():
     #obtener los datos del dia
-    registros = datos_del_dia()
+    registros = mostrar_registros()
 
     print("cantidad de datos a exportar: ", len(registros))
     # Si no hay registros, mostrar mensaje y salir
@@ -188,10 +188,10 @@ def pasar_excel():
         return
     
     #convertir los datos del dia a un DataFrame en pandas 
-    df = pd.DataFrame(registros, columns=["ID", "Alumno", "Profesor", "Curso", "Herramientas", "Fecha"])
-    df.to_excel("Registros_Dia.xlsx", index=False)
+    df = pd.DataFrame(registros, columns=["ID", "Alumno", "Profesor", "Curso", "Herramientas"])
+    df.to_csv("Registros_Dia.csv", index=False)
     messagebox.showwarning("Datos guardados de forma exitosa!!")
-'''
+
 
     file_path = filedialog.asksaveasfilename(defaultextension="xlsx", filetypes=[("Excel files", "*.xlsx")]) 
 
@@ -199,7 +199,7 @@ def pasar_excel():
         # Guardar DataFrame como archivo Excel
         df.to_excel(file_path, index=False)
         messagebox.showinfo("Exportación Exitosa", f"Los datos han sido exportados a {file_path}")
-'''
+
 
 app = Tk()
 app.title("StoreRoom")
