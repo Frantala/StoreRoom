@@ -161,6 +161,7 @@ def filtrar_registros():
     conn.close()
 
 # Creamos una funcion para obtener los datos del dia en la base de datos 
+'''
 def datos_del_dia():
     # obtener la fecha actual 
     hoy = datetime.datetime.now().strftime("%Y-%M-%D")  # Formato "YYYY-MM-DD"
@@ -175,30 +176,32 @@ def datos_del_dia():
     #verificar si hay datos obtenidos
     print(registros_del_dia)
     return registros_del_dia
+'''
 
 # Funcion para pasar todos los datos guardados en la treeview a un excel 
 def pasar_excel():
-    #obtener los datos del dia
-    registros = mostrar_registros()
-
-    print("cantidad de datos a exportar: ", len(registros))
-    # Si no hay registros, mostrar mensaje y salir
+    # Obtener los datos de la Treeview
+    registros = []
+    for row_id in tree.get_children():
+        row = tree.item(row_id)['values']
+        registros.append(row)
+    
+    # Verificar si hay datos en la Treeview
     if not registros:
         messagebox.showwarning("Sin Datos", "No hay datos para exportar.")
         return
     
-    #convertir los datos del dia a un DataFrame en pandas 
+    # Convertir los datos en un DataFrame de pandas
     df = pd.DataFrame(registros, columns=["ID", "Alumno", "Profesor", "Curso", "Herramientas"])
-    df.to_csv("Registros_Dia.csv", index=False)
-    messagebox.showwarning("Datos guardados de forma exitosa!!")
-
-
-    file_path = filedialog.asksaveasfilename(defaultextension="xlsx", filetypes=[("Excel files", "*.xlsx")]) 
-
+    
+    # Abrir un diálogo para guardar el archivo
+    file_path = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files", "*.xlsx")])
+    
     if file_path:
-        # Guardar DataFrame como archivo Excel
+        # Guardar el DataFrame como un archivo Excel
         df.to_excel(file_path, index=False)
         messagebox.showinfo("Exportación Exitosa", f"Los datos han sido exportados a {file_path}")
+
 
 
 app = Tk()
