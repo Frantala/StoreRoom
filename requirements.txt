@@ -1,0 +1,5 @@
+sqlite3
+pandas
+cv2
+OpenPyXl
+pyzbar
