@@ -4,10 +4,12 @@ from pyzbar.pyzbar import decode
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+from tkinter import ttk as ttk_widgets
 import pandas as pd
 import openpyxl
 import datetime
 from tkinter import filedialog
+
 
 # Crear o conectar a una base de datos
 conn = sqlite3.connect('Proyecto-Escuela')
@@ -128,7 +130,7 @@ def scan_qr():
             return qr_data
         return None
 
-    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(0)
     herramientas_qr = []
     while True:
         ret, frame = cap.read()
@@ -204,70 +206,90 @@ def pasar_excel():
 
 
 
-app = Tk()
+# Crear la ventana principal
+app = ttk.
 app.title("StoreRoom")
 
-titulo = Label(app, text="REGISTRO DE HERRAMIENTAS", fg="black", font=("helvetica", 17, "bold"), pady=10)
+# Crear un contenedor para el canvas y el scrollbar
+main_frame = ttk.Frame(app)
+main_frame.pack(fill=ttk.BOTH, expand=1)
+
+# Crear un canvas
+canvas = ttk.Canvas(main_frame)
+canvas.pack(side=ttk.LEFT, fill=ttk.BOTH, expand=1)
+
+# Crear un scrollbar y asociarlo con el canvas
+scrollbar = ttk_widgets.Scrollbar(main_frame, orient=ttk.VERTICAL, command=canvas.yview)
+scrollbar.pack(side=ttk.RIGHT, fill=ttk.Y)
+canvas.configure(yscrollcommand=scrollbar.set)
+
+# Crear un frame dentro del canvas para contener todos los widgets
+content_frame = ttk.Frame(canvas)
+canvas.create_window((0, 0), window=content_frame, anchor="nw")
+
+# Actualizar el área de scroll según el contenido
+content_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+
+# Contenido de la app
+titulo = ttk.Label(content_frame, text="REGISTRO DE HERRAMIENTAS", fg="black", font=("helvetica", 17, "bold"), pady=10)
 titulo.pack()
 
-marco = LabelFrame(app, text="Datos del Estudiante", font=("helvetica", 20, "bold"), pady=5)
+marco = ttk.LabelFrame(content_frame, text="Datos del Estudiante", font=("helvetica", 20, "bold"), pady=5)
 marco.config(bd=2)
 marco.pack()
-lbl_alumno = Label(marco, text="Alumno", font=("helvetica", 15, "bold"))
+lbl_alumno = ttk.Label(marco, text="Alumno", font=("helvetica", 15, "bold"))
 lbl_alumno.grid(row=1, column=0, sticky="s", pady=5, padx=8)
-alumno = Entry(marco, width=40, border=5, font=("helvetica", 12))
+alumno = ttk.Entry(marco, width=40, border=5, font=("helvetica", 12))
 alumno.grid(row=1, column=1, pady=5, padx=100)
 alumno.focus()
 
-
-# Haciendo un boton para guardar los datos en un Excel
-btn_excel = Button(app, text="Guardar como Excel", font=("helvetica", 12), bg="green", command=pasar_excel)
+# Haciendo un botón para guardar los datos en un Excel
+btn_excel = ttk.Button(content_frame, text="Guardar como Excel", font=("helvetica", 12), bg="green", command=pasar_excel)
 btn_excel.place(x=30, y=100)
 
-lbl_profesor = Label(marco, text="Profesor", font=("helvetica", 15, "bold"))
+lbl_profesor = ttk.Label(marco, text="Profesor", font=("helvetica", 15, "bold"))
 lbl_profesor.grid(row=2, column=0, sticky="s", pady=5, padx=8)
-profesor = Entry(marco, width=40, border=5, font=("helvetica", 12))
+profesor = ttk.Entry(marco, width=40, border=5, font=("helvetica", 12))
 profesor.grid(row=2, column=1, pady=5, padx=100)
 
-lbl_curso = Label(marco, text="Curso", font=("helvetica", 15, "bold"))
+lbl_curso = ttk.Label(marco, text="Curso", font=("helvetica", 15, "bold"))
 lbl_curso.grid(row=3, column=0, pady=5, padx=8)
-curso = Entry(marco, width=40, border=5, font=("helvetica", 12))
+curso = ttk.Entry(marco, width=40, border=5, font=("helvetica", 12))
 curso.grid(row=3, column=1)
 
-marco_herramientas = LabelFrame(app, text="Herramientas a llevar", font=("helvetica", 20, "bold"), pady=5)
+marco_herramientas = ttk.LabelFrame(content_frame, text="Herramientas a llevar", font=("helvetica", 20, "bold"), pady=5)
 marco_herramientas.config(bd=2)
 marco_herramientas.pack(pady=20, padx=200)
 
-lbl_herramientas = Label(marco_herramientas, text="Herramientas", font=("helvetica", 15, "bold"))
+lbl_herramientas = ttk.Label(marco_herramientas, text="Herramientas", font=("helvetica", 15, "bold"))
 lbl_herramientas.grid(row=1, column=0, pady=5, padx=8)
-herramientas = Text(marco_herramientas, width=30, height=10, font=("helvetica", 12), border=5)
+herramientas = ttk.Text(marco_herramientas, width=30, height=10, font=("helvetica", 12), border=5)
 herramientas.grid(row=1, column=1, padx=15, pady=10)
-boton_qr = Button(marco_herramientas, text="Escanear QR", font=("helvetica", 12), border=5, bg="gray", fg="white", command=scan_qr)
+boton_qr = ttk.Button(marco_herramientas, text="Escanear QR", font=("helvetica", 12), border=5, bg="gray", fg="white", command=scan_qr)
 boton_qr.grid(row=2, column=1, padx=15, pady=10)
 
-frame_botones = LabelFrame(app)
+frame_botones = ttk.LabelFrame(content_frame)
 frame_botones.pack()
 
-boton_registrar = Button(frame_botones, text="AGREGAR", height=2, width=15, font=("helvetica", 12), bg="green", fg="white", command=agregar)
+boton_registrar = ttk.Button(frame_botones, text="AGREGAR", height=2, width=15, font=("helvetica", 12), bg="green", fg="white", command=agregar)
 boton_registrar.grid(row=0, column=0)
-boton_editar = Button(frame_botones, text="EDITAR", height=2, width=15, font=("helvetica", 12), bg="gray", fg="white", state=DISABLED)
+boton_editar = ttk.Button(frame_botones, text="EDITAR", height=2, width=15, font=("helvetica", 12), bg="gray", fg="white", state=ttk.DISABLED)
 boton_editar.grid(row=0, column=1)
-boton_eliminar = Button(frame_botones, text="ELIMINAR", width=15, height=2, font=("helvetica", 12), bg="red", fg="white", command=eliminar)
+boton_eliminar = ttk.Button(frame_botones, text="ELIMINAR", width=15, height=2, font=("helvetica", 12), bg="red", fg="white", command=eliminar)
 boton_eliminar.grid(row=0, column=2)
 
-# Creamos un frame/espacio para filtrar registros es decir buscar por nombre de profesor
-
-frame_filtrar = LabelFrame(app, width=50, height=50)
+# Crear un frame/espacio para filtrar registros, es decir, buscar por nombre de profesor
+frame_filtrar = ttk.LabelFrame(content_frame, width=50, height=50)
 frame_filtrar.pack(pady=15)
 
-lbl_filtrar = Label(frame_filtrar, text="Buscar Registros", font=("helvetica", 12))
+lbl_filtrar = ttk.Label(frame_filtrar, text="Buscar Registros", font=("helvetica", 12))
 lbl_filtrar.grid(row=0, column=0)
-filtrar = Entry(frame_filtrar, width=50, font=("helvetica", 10), borderwidth=5)
+filtrar = ttk.Entry(frame_filtrar, width=50, font=("helvetica", 10), borderwidth=5)
 filtrar.grid(row=0, column=1, padx=10)
-btn_filtrar = Button(frame_filtrar, text="Buscar", font=("helvetica", 12), command=filtrar_registros)
+btn_filtrar = ttk.Button(frame_filtrar, text="Buscar", font=("helvetica", 12), command=filtrar_registros)
 btn_filtrar.grid(row=0, column=2, padx=10)
 
-tree = ttk.Treeview(app, columns=("ID", "Alumno", "Profesor", "Curso", "Herramientas"), show="headings", height=20)
+tree = ttk_widgets.Treeview(content_frame, columns=("ID", "Alumno", "Profesor", "Curso", "Herramientas"), show="headings", height=20)
 tree.heading("ID", text="ID")
 tree.heading("Alumno", text="Alumno")
 tree.heading("Profesor", text="Profesor")
@@ -282,15 +304,6 @@ tree.pack(pady=20)
 
 tree.bind("<Double-1>", cargar_registro)
 
-# Crear Scrollbar vertical
-scrollbar = ttk.Scrollbar(app)
-tree.config(yscrollcommand=scrollbar.set)
-scrollbar.config(command=tree.yview)
-
-# Empaquetamos la barra vertical y lo colocamos en el lugar correcot
-tree.pack(side=LEFT, fill=BOTH, expand=True)
-scrollbar.pack(side=RIGHT, fill=Y)
-
-
 mostrar_registros()
+
 app.mainloop()
