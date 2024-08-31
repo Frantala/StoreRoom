@@ -162,23 +162,6 @@ def filtrar_registros():
         tree.insert("", END, values=registro)
     conn.close()
 
-# Creamos una funcion para obtener los datos del dia en la base de datos 
-'''
-def datos_del_dia():
-    # obtener la fecha actual 
-    hoy = datetime.datetime.now().strftime("%Y-%M-%D")  # Formato "YYYY-MM-DD"
-    # conectar a la base de datos y obtener los registros del dia
-    conn = sqlite3.connect('Proyecto-Escuela')
-    c = conn.cursor()
-    c.execute("SELECT * FROM Registros WHERE date(timestamp) = ?", (hoy,))
-    registros_del_dia = c.fetchall()
-    conn.commit()
-    conn.close()
-
-    #verificar si hay datos obtenidos
-    print(registros_del_dia)
-    return registros_del_dia
-'''
 
 # Funcion para pasar todos los datos guardados en la treeview a un excel 
 def pasar_excel():
@@ -249,8 +232,8 @@ alumno.grid(row=1, column=1, pady=5, padx=100)
 alumno.focus()
 
 # Botón para guardar los datos en un Excel
-btn_excel = Button(content_frame, text="Guardar como Excel", font=("helvetica", 12), bg="green", command=pasar_excel)
-btn_excel.grid(row=2, column=0, pady=10)
+btn_excel = Button(content_frame, text="Guardar como Excel", height=5, width=20,font=("helvetica", 15), bg="green", fg="white",command=pasar_excel)
+btn_excel.grid(row=1, column=30, pady=10)
 
 lbl_profesor = Label(marco, text="Profesor", font=("helvetica", 15, "bold"))
 lbl_profesor.grid(row=2, column=0, sticky="s", pady=5, padx=8)
