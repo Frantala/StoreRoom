@@ -199,7 +199,7 @@ main_frame.pack(fill=BOTH, expand=1)
 
 # Crear un canvas
 canvas = Canvas(main_frame)
-canvas.pack(side=LEFT, fill=BOTH, expand=1)
+canvas.pack(side=LEFT,fill=BOTH, expand=1)
 
 # Crear un scrollbar y asociarlo con el canvas
 scrollbar = ttk.Scrollbar(main_frame, orient=VERTICAL, command=canvas.yview)
@@ -219,21 +219,21 @@ content_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas
 canvas.bind('<Configure>', lambda e: canvas.itemconfig(canvas.create_window((canvas.winfo_width()/2, 0), window=content_frame, anchor="n"), width=canvas.winfo_width()))
 
 # Contenido de la app
-titulo = Label(content_frame, text="REGISTRO DE HERRAMIENTAS", fg="black", font=("helvetica", 17, "bold"), pady=10)
-titulo.grid(row=0, column=0, pady=10)
+titulo = Label(content_frame, text="REGISTRO DE HERRAMIENTAS", fg="black", font=("helvetica", 20, "bold"), pady=10)
+titulo.grid(row=0, column=1,columnspan=3,pady=10)
 
 marco = LabelFrame(content_frame, text="Datos del Estudiante", font=("helvetica", 20, "bold"), pady=5)
 marco.config(bd=2)
-marco.grid(row=1, column=0, pady=10)
+marco.grid(row=1, column=0,pady=10)
 lbl_alumno = Label(marco, text="Alumno", font=("helvetica", 15, "bold"))
-lbl_alumno.grid(row=1, column=0, sticky="s", pady=5, padx=8)
+lbl_alumno.grid(row=1, column=0, sticky="s",pady=5, padx=8)
 alumno = Entry(marco, width=40, border=5, font=("helvetica", 12))
 alumno.grid(row=1, column=1, pady=5, padx=100)
 alumno.focus()
 
 # Botón para guardar los datos en un Excel
-btn_excel = Button(content_frame, text="Guardar como Excel", height=5, width=20,font=("helvetica", 15), bg="green", fg="white",command=pasar_excel)
-btn_excel.grid(row=1, column=30, pady=10)
+'''btn_excel = Button(content_frame, text="Guardar como Excel", height=5, width=10,font=("helvetica", 15), bg="green", fg="white",command=pasar_excel)
+btn_excel.grid(row=1, column=2, pady=10)'''
 
 lbl_profesor = Label(marco, text="Profesor", font=("helvetica", 15, "bold"))
 lbl_profesor.grid(row=2, column=0, sticky="s", pady=5, padx=8)
