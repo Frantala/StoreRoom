@@ -220,11 +220,11 @@ canvas.bind('<Configure>', lambda e: canvas.itemconfig(canvas.create_window((can
 
 # Contenido de la app
 titulo = Label(content_frame, text="REGISTRO DE HERRAMIENTAS", fg="black", font=("helvetica", 20, "bold"), pady=10)
-titulo.grid(row=0, column=1,columnspan=3,pady=10)
+titulo.grid(row=0, column=0,columnspan=3,pady=10)
 
 marco = LabelFrame(content_frame, text="Datos del Estudiante", font=("helvetica", 20, "bold"), pady=5)
 marco.config(bd=2)
-marco.grid(row=1, column=0,pady=10)
+marco.grid(row=1, column=0,pady=10, padx=500)
 lbl_alumno = Label(marco, text="Alumno", font=("helvetica", 15, "bold"))
 lbl_alumno.grid(row=1, column=0, sticky="s",pady=5, padx=8)
 alumno = Entry(marco, width=40, border=5, font=("helvetica", 12))
@@ -247,7 +247,7 @@ curso.grid(row=3, column=1)
 
 marco_herramientas = LabelFrame(content_frame, text="Herramientas a llevar", font=("helvetica", 20, "bold"), pady=5)
 marco_herramientas.config(bd=2)
-marco_herramientas.grid(row=3, column=0, pady=20, padx=200)
+marco_herramientas.grid(row=3, column=0, pady=20, padx=500)
 
 lbl_herramientas = Label(marco_herramientas, text="Herramientas", font=("helvetica", 15, "bold"))
 lbl_herramientas.grid(row=1, column=0, pady=5, padx=8)
