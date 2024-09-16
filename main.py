@@ -232,8 +232,8 @@ alumno.grid(row=1, column=1, pady=5, padx=100)
 alumno.focus()
 
 # Botón para guardar los datos en un Excel
-'''btn_excel = Button(content_frame, text="Guardar como Excel", height=5, width=10,font=("helvetica", 15), bg="green", fg="white",command=pasar_excel)
-btn_excel.grid(row=1, column=2, pady=10)'''
+btn_excel = Button(content_frame, text="Guardar como Excel", height=3, width=18,font=("helvetica", 15), bg="green", fg="white",command=pasar_excel)
+btn_excel.grid(column=0, row=1)
 
 lbl_profesor = Label(marco, text="Profesor", font=("helvetica", 15, "bold"))
 lbl_profesor.grid(row=2, column=0, sticky="s", pady=5, padx=8)
