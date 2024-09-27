@@ -81,7 +81,7 @@ curso.grid(row=3, column=1, pady=5, padx=10)
 
 # Botón para guardar en Excel
 btn_excel = Button(content_frame, text="Guardar como Excel", height=2, width=18, font=("helvetica", 15), bg="green", fg="white", command=pasar_excel)
-btn_excel.grid(column=0, row=1, sticky="e", padx=10, pady=10)
+btn_excel.grid(column=0, row=1, sticky="e", padx=50, pady=10)
 
 # Marco de herramientas a llevar
 marco_herramientas = LabelFrame(content_frame, text="Herramientas a llevar", font=("helvetica", 20, "bold"), pady=5)
