@@ -13,7 +13,11 @@ herramientas = ["Martillo",
                 "Guantes", 
                 "Amoladora", 
                 "Augereadoras",
-                "yaqui"]
+                "Guardapolvo",
+                "Mascara facial",
+                "Regla",
+                "Punta de Trazar",
+                ]
 
 # Generar códigos QR para cada herramienta
 for herramienta in herramientas:
