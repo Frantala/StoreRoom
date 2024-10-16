@@ -1,9 +1,12 @@
-import torch
-import numpy as np
+import sqlite3
+import pandas as pd
+
+db = sqlite3.connect("Proyecto-Escuela")
+
+query = """
+    SELECT * FROM Registros
+"""
 
 
-array = np.array([[1,2,3,4,5], [6,7,8,9,10]])
 
-tensor = torch.tensor((array))
-
-print(tensor.ndim)
+print(pd.read_sql_query(query, db))
