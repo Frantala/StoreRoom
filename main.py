@@ -187,6 +187,9 @@ def pasar_excel():
         df.to_excel(file_path, index=False)
         messagebox.showinfo("Exportación Exitosa", f"Los datos han sido exportados a {file_path}")
 
+    # Creamos funcion para eliminar todo del registro de una sola vez
+def eliminar_todo():
+        pass
 
 
 # Crear la ventana principal
@@ -282,6 +285,10 @@ filtrar = Entry(frame_filtrar, width=50, font=("helvetica", 10), borderwidth=5)
 filtrar.grid(row=0, column=1, padx=10)
 btn_filtrar = Button(frame_filtrar, text="Buscar", font=("helvetica", 12), command=filtrar_registros)
 btn_filtrar.grid(row=0, column=2, padx=10)
+
+# dentro de este frame de filtrar ponemos un boton al lado para eliminar todo los registros de una sola vez
+btn_eliminar_todo = Button(frame_filtrar, text="Eliminar Todo", font=("helvetica", 12), bg="blue", fg="white", command=eliminar_todo)
+btn_eliminar_todo.grid(row=0, column=4, padx=5) # aca le damos un padding en x para que tenga mas esapacio 
 
 # Tabla de registros
 tree = ttk.Treeview(content_frame, columns=("ID", "Alumno", "Profesor", "Curso", "Herramientas"), show="headings", height=20)
