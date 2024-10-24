@@ -189,7 +189,15 @@ def pasar_excel():
 
     # Creamos funcion para eliminar todo del registro de una sola vez
 def eliminar_todo():
-        pass
+        elimnar = tree.delete()
+        respuesta = messagebox.askyesno("Confirmar eliminación", "¿Está seguro de que desea eliminar todos los registros?")
+        if respuesta:
+            conn = sqlite3.connect('Proyecto-Escuela')
+            c = conn.cursor()
+            c.execute("DELETE  FROM Registros")
+            conn.commit()
+            conn.close()
+            tree.delete(*tree.get_children())
 
 
 # Crear la ventana principal
