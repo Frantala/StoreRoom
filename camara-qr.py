@@ -56,22 +56,3 @@ def decode_qr(frame, last_qr_data):
         # Mostrar los datos del QR en la imagen
         cv2.putText(frame, qr_data, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
     return frame, last_qr_data
-
-def main():
-    # Capturar video desde la cámara
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-    last_qr_data = ""
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-        # Decodificar y mostrar el QR
-        frame, last_qr_data = decode_qr(frame, last_qr_data)
-        cv2.imshow("QR Code Scanner", frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-    cap.release()
-    cv2.destroyAllWindows()
-
-if __name__ == "__main__":
-    main()
