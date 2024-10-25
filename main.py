@@ -130,9 +130,9 @@ def scan_qr():
             return qr_data
         return None
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(0) 
     herramientas_qr = []
-    while True:
+    while True: # Creamos un bucle que mientras este sea igual a True va a leer los frames de la camara
         ret, frame = cap.read()
         if not ret:
             break
@@ -143,7 +143,7 @@ def scan_qr():
             herramientas.insert(END, herramienta)
 
         cv2.imshow("Escanear QR", frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord('Esc'): #Esto le da la orden de como sacar la camara
             break
 
     cap.release()
@@ -198,6 +198,7 @@ def eliminar_todo():
             conn.commit()
             conn.close()
             tree.delete(*tree.get_children())
+            conn.close()
 
 
 # Crear la ventana principal
