@@ -143,7 +143,7 @@ def scan_qr():
             herramientas.insert(END, herramienta)
 
         cv2.imshow("Escanear QR", frame)
-        if cv2.waitKey(1) & 0xFF == ord('Esc'): #Esto le da la orden de como sacar la camara
+        if cv2.waitKey(1) & 0xFF == ord('q'): #Esto le da la orden de como sacar la camara
             break
 
     cap.release()
