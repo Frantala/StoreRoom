@@ -123,7 +123,7 @@ def scan_qr():
     def decode_qr(frame):
         qr_codes = decode(frame)
         for qr in qr_codes:
-            qr_data = qr.data.decode("utf-9")
+            qr_data = qr.data.decode("utf-8")
             x, y, w, h = qr.rect
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             cv2.putText(frame, qr_data, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
