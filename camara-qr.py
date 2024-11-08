@@ -16,7 +16,7 @@ herramientas = ["Martillo",
                 "Guardapolvo",
                 "Mascara facial",
                 "Regla",
-                "Punta de Trazar",
+                "Punta de Trazar"
                 ]
 
 # Generar códigos QR para cada herramienta
