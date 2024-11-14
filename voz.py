@@ -11,7 +11,7 @@ with mic as source:
     
     try:
         # Reconocer la voz usando Google Web Speech API
-        texto = r.recognize_google(audio, language='es-ES')
+        texto = r.recognize_google_cloud(audio, language='es-ES')
         print("Has dicho: " + texto)
     except sr.UnknownValueError:
         print("No se pudo entender el audio")
