@@ -21,8 +21,7 @@ c.execute("""CREATE TABLE IF NOT EXISTS Registros (
     Alumno text,
     Profesor text,
     Curso text,
-    Herramientas text,
-    Fecha text
+    Herramientas textext
 )""")
 
 # Añadir la columna timestamp si no existe
@@ -40,12 +39,11 @@ def agregar():
     conn = sqlite3.connect('Proyecto-Escuela')
     c = conn.cursor()
     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    c.execute("INSERT INTO Registros (Alumno, Profesor, Curso, Herramientas) VALUES (?, ?, ?, ?, ?)", (
+    c.execute("INSERT INTO Registros (Alumno, Profesor, Curso, Herramientas) VALUES (?, ?, ?, ?)", (
         alumno.get(),
         profesor.get(),
         curso.get(),
         herramientas.get("1.0", END).strip(),
-        fecha_actual
     ))
     conn.commit()
     conn.close()
@@ -61,7 +59,7 @@ def mostrar_registros():
         tree.delete(row)
     conn = sqlite3.connect('Proyecto-Escuela')
     c = conn.cursor()
-    c.execute("SELECT rowid, Alumno, Profesor, Curso, Herramientas, Fecha FROM Registros")
+    c.execute("SELECT rowid, Alumno, Profesor, Curso, Herramientas FROM Registros")
     registros = c.fetchall()
     for registro in registros:
         tree.insert("", END, values=registro)
@@ -310,13 +308,11 @@ tree.heading("Alumno", text="Alumno")
 tree.heading("Profesor", text="Profesor")
 tree.heading("Curso", text="Curso")
 tree.heading("Herramientas", text="Herramientas")
-tree.heading("Fecha", text="Fecha")
 tree.column("ID", width=30)
 tree.column("Alumno", width=200)
 tree.column("Profesor", width=200)
 tree.column("Curso", width=150)
 tree.column("Herramientas", width=300)
-tree.column("Fecha", width=200)
 tree.grid(row=6, column=0, pady=20, sticky="n")
 
 tree.bind("<Double-1>", cargar_registro)
