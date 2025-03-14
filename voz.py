@@ -1,19 +1,21 @@
-import speech_recognition as sr
+import whisper
 
-r = sr.Recognizer()
-mic = sr.Microphone()
+model = whisper.load_model("turbo")
 
-with mic as source:
-    print("ajustando el ruido ambiental un momento...")
-    r.adjust_for_ambient_noise(source)
-    print("escuchando...")
-    audio = r.listen(source)
-    
-    try:
-        # Reconocer la voz usando Google Web Speech API
-        texto = r.recognize_google_cloud(audio, language='es-ES')
-        print("Has dicho: " + texto)
-    except sr.UnknownValueError:
-        print("No se pudo entender el audio")
-    except sr.RequestError as e:
-        print("Error al solicitar resultados; {0}".format(e))
+# load audio and pad/trim it to fit 30 seconds
+audio = whisper.load_audio("audio.mp3")
+audio = whisper.pad_or_trim(audio)
+
+# make log-Mel spectrogram and move to the same device as the model
+#mel = whisper.log_mel_spectrogram(audio, n_mels=model.dims.n_mels).to(model.device)
+
+# detect the spoken language
+#_, probs = model.detect_language(mel)
+#print(f"Detected language: {max(probs, key=probs.get)}")
+
+# decode the audio
+#options = whisper.DecodingOptions()
+#result = whisper.decode(model, mel, options)
+
+#print the recognized text
+#print(result.text)
